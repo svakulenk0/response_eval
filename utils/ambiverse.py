@@ -56,14 +56,27 @@ ambiversed_dataset = []
 print("Annotating...")
 for index, x in dataset.iterrows():
     print(x["Dialogue_ID"])
-    context_matches = ambiverse_annotation_request(x[CONTEXT_COLUMN])['matches']
-    reply_matches = ambiverse_annotation_request(x[REPLY_COLUMN])['matches']
-    context_entities = ambiverse_annotation_request(x[CONTEXT_COLUMN])['entities']
-    reply_entities = ambiverse_annotation_request(x[REPLY_COLUMN])['entities']
+
+    # parse context
+    context_annotations = ambiverse_annotation_request(x[CONTEXT_COLUMN])
+    context_matches = context_annotations['matches']
+    if context_matches:
+        context_entities = context_annotations['entities']
+    else:
+        context_entities = []
+
+    # parse candidate reply
+    reply_annotations = ambiverse_annotation_request(x[REPLY_COLUMN])
+    reply_matches = reply_annotations['matches']
+    if reply_matches:
+        reply_entities = reply_annotations['entities']
+    else
+        reply_entities = []
     ambiversed_dataset.append({"Dialogue_ID": x["Dialogue_ID"], "Label": x["Label"],
                                REPLY_COLUMN: x[REPLY_COLUMN], CONTEXT_COLUMN: x[CONTEXT_COLUMN],
                                REPLY_MATCHES_COLUMN: reply_matches, CONTEXT_MATCHES_COLUMN: context_matches,
                                REPLY_ENTITIES_COLUMN: reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities})
+
 
 with open(NEW_DATASET_PATH, 'w') as outfile:
     json.dump(ambiversed_dataset, outfile)
