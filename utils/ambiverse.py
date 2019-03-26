@@ -60,7 +60,7 @@ for index, x in dataset.iterrows():
     # parse context
     context_annotations = ambiverse_annotation_request(x[CONTEXT_COLUMN])
     context_matches = context_annotations['matches']
-    if context_matches:
+    if 'entities' in context_annotations:
         context_entities = context_annotations['entities']
     else:
         context_entities = []
@@ -68,7 +68,7 @@ for index, x in dataset.iterrows():
     # parse candidate reply
     reply_annotations = ambiverse_annotation_request(x[REPLY_COLUMN])
     reply_matches = reply_annotations['matches']
-    if reply_matches:
+    if 'entities' in reply_annotations:
         reply_entities = reply_annotations['entities']
     else:
         reply_entities = []
