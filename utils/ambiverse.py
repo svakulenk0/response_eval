@@ -20,6 +20,8 @@ CONTEXT_COLUMN = 'Dialogue_Context'
 REPLY_COLUMN = 'Reply'
 
 # new columns with semantic annotations
+CONTEXT_MATCHES_COLUMN = 'Dialogue_Context_Matches'
+REPLY_MATCHES_COLUMN = 'Reply_Matches'
 CONTEXT_ENTITIES_COLUMN = 'Dialogue_Context_Entities'
 REPLY_ENTITIES_COLUMN = 'Reply_Entities'
 
@@ -46,7 +48,7 @@ def ambiverse_annotation_request(input_text, ignore='Speaker'):
     input_text = re.sub(r'%s'%ignore, '', input_text)
     data['text'] = input_text
     response = requests.post(ambiverse_api_url, headers=headers, data=json.dumps(data))
-    return json.loads(response.text)['matches']
+    return json.loads(response.text)
 
 
 ambiversed_dataset = []
@@ -54,11 +56,14 @@ ambiversed_dataset = []
 print("Annotating...")
 for index, x in dataset.iterrows():
     print(x["Dialogue_ID"])
-    context_entities = ambiverse_annotation_request(x[CONTEXT_COLUMN])
-    reply_entities = ambiverse_annotation_request(x[REPLY_COLUMN])
+    context_matches = ambiverse_annotation_request(x[CONTEXT_COLUMN])['matches']
+    reply_matches = ambiverse_annotation_request(x[REPLY_COLUMN])['matches']
+    context_entities = ambiverse_annotation_request(x[CONTEXT_COLUMN])['entities']
+    reply_entities = ambiverse_annotation_request(x[REPLY_COLUMN])['entities']
     ambiversed_dataset.append({"Dialogue_ID": x["Dialogue_ID"], "Label": x["Label"],
                                REPLY_COLUMN: x[REPLY_COLUMN], CONTEXT_COLUMN: x[CONTEXT_COLUMN],
-                               REPLY_ENTITIES_COLUMN: reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities,})
+                               REPLY_MATCHES_COLUMN: reply_matches, CONTEXT_MATCHES_COLUMN: context_matches,
+                               REPLY_ENTITIES_COLUMN: reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities})
 
 with open(NEW_DATASET_PATH, 'w') as outfile:
     json.dump(ambiversed_dataset, outfile)
