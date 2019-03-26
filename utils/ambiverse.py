@@ -70,7 +70,7 @@ for index, x in dataset.iterrows():
     reply_matches = reply_annotations['matches']
     if reply_matches:
         reply_entities = reply_annotations['entities']
-    else
+    else:
         reply_entities = []
     ambiversed_dataset.append({"Dialogue_ID": x["Dialogue_ID"], "Label": x["Label"],
                                REPLY_COLUMN: x[REPLY_COLUMN], CONTEXT_COLUMN: x[CONTEXT_COLUMN],
