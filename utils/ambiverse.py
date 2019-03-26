@@ -77,4 +77,4 @@ for x in dataset:
         counter += 1
         print(x['Dialogue_Context_Entities'])
         print(x['Reply_Entities'])
-print("Entities detected for %d out of %d samples"% (counter, len(dataset))
+print("Entities detected for %d out of %d samples"% (counter, len(dataset)))
