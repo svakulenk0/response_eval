@@ -103,10 +103,12 @@ for index, x in dataset.iterrows():
     scores.append(x["User_Relevance_Score"])
 
 # add last dialogue
-ambiversed_dataset.append({"Dialogue_ID": cursor, "Label": labels,
-                           REPLY_COLUMN: replies, CONTEXT_COLUMN: x[CONTEXT_COLUMN],
-                           REPLY_MATCHES_COLUMN: reply_matches, CONTEXT_MATCHES_COLUMN: context_matches,
-                           REPLY_ENTITIES_COLUMN: reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities})
+ambiversed_dataset.append({"Dialogue_ID": cursor, "Label": x["Label"],
+                           REPLY_COLUMN: x[REPLY_COLUMN], CONTEXT_COLUMN: x[CONTEXT_COLUMN],
+                           REPLY_MATCHES_COLUMN: correct_reply_matches, CONTEXT_MATCHES_COLUMN: context_matches,
+                           REPLY_ENTITIES_COLUMN: correct_reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities,
+                           "User_Relevance_Scores": scores, "User_Replies": alternative_replies,
+                           ALTERNATIVE_REPLIES_MATCHES_COLUMN: reply_matches, ALTERNATIVE_REPLIES_ENTITIES_COLUMN: reply_entities})
 
 
 with open(NEW_DATASET_PATH, 'w') as outfile:
