@@ -32,7 +32,7 @@ ALTERNATIVE_REPLIES_ENTITIES_COLUMN = 'Alternative_Replies_Entities'
 def load_dataset(path=DATASET_PATH):
     data = pd.read_csv(path, sep="\t")
     df = data[["Dialogue_ID", "Dialogue_Context", "Reply", "Label", "Age", "Gender", "English_Proficency", "User_Relevance_Score", "User_Reply", "Task_ID"]]
-    return df
+    return df.iloc[:10,:]
 
 
 dataset = load_dataset()
