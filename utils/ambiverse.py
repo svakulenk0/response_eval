@@ -83,7 +83,10 @@ for index, x in dataset.iterrows():
 
         # parse correct reply
         correct_reply_annotations = ambiverse_annotation_request(x[REPLY_COLUMN])
-        correct_reply_matches = correct_reply_annotations['matches']
+        if 'matches' in correct_reply_annotations:
+            correct_reply_matches = correct_reply_annotations['matches']
+        else:
+            correct_reply_matches = []
         if 'entities' in correct_reply_annotations:
             correct_reply_entities = correct_reply_annotations['entities']
         else:
@@ -94,7 +97,11 @@ for index, x in dataset.iterrows():
 
     # parse correct reply
     reply_annotations = ambiverse_annotation_request(x[ALTERNATIVE_REPLY_COLUMN])
-    reply_matches.append(reply_annotations['matches'])
+    if 'entities' in reply_annotations:
+        reply_matches.append(reply_annotations['matches'])
+    else:
+        reply_matches.append([])
+    
     if 'entities' in reply_annotations:
         reply_entities.append(reply_annotations['entities'])
     else:
