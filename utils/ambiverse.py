@@ -33,6 +33,7 @@ def load_dataset(path=DATASET_PATH):
     data = pd.read_csv(path, sep="\t")
     df = data[["Dialogue_ID", "Dialogue_Context", "Reply", "Label", "Age", "Gender", "English_Proficency", "User_Relevance_Score", "User_Reply", "Task_ID"]]
     return df.iloc[:10,:]
+    # return df
 
 
 dataset = load_dataset()
@@ -108,7 +109,7 @@ ambiversed_dataset.append({"Dialogue_ID": cursor, "Label": x["Label"],
                            REPLY_MATCHES_COLUMN: correct_reply_matches, CONTEXT_MATCHES_COLUMN: context_matches,
                            REPLY_ENTITIES_COLUMN: correct_reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities,
                            "User_Relevance_Scores": scores, "User_Replies": alternative_replies,
-                           ALTERNATIVE_REPLIES_MATCHES_COLUMN: reply_matches, ALTERNATIVE_REPLIES_ENTITIES_COLUMN: reply_entities})
+                           USER_REPLIES_MATCHES_COLUMN: reply_matches, USER_REPLIES_ENTITIES_COLUMN: reply_entities})
 
 
 with open(NEW_DATASET_PATH, 'w') as outfile:
