@@ -25,8 +25,8 @@ CONTEXT_MATCHES_COLUMN = 'Dialogue_Context_Matches'
 REPLY_MATCHES_COLUMN = 'Reply_Matches'
 CONTEXT_ENTITIES_COLUMN = 'Dialogue_Context_Entities'
 REPLY_ENTITIES_COLUMN = 'Reply_Entities'
-ALTERNATIVE_REPLIES_MATCHES_COLUMN = 'Alternative_Replies_Matches'
-ALTERNATIVE_REPLIES_ENTITIES_COLUMN = 'Alternative_Replies_Entities'
+USER_REPLIES_MATCHES_COLUMN = 'User_Replies_Matches'
+USER_REPLIES_ENTITIES_COLUMN = 'User_Replies_Entities'
 
 # 1. load all dialogues
 def load_dataset(path=DATASET_PATH):
@@ -67,7 +67,7 @@ for index, x in dataset.iterrows():
                                        REPLY_MATCHES_COLUMN: correct_reply_matches, CONTEXT_MATCHES_COLUMN: context_matches,
                                        REPLY_ENTITIES_COLUMN: correct_reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities,
                                        "User_Relevance_Scores": scores, "User_Replies": alternative_replies,
-                                       ALTERNATIVE_REPLIES_MATCHES_COLUMN: reply_matches, ALTERNATIVE_REPLIES_ENTITIES_COLUMN: reply_entities})
+                                       USER_REPLIES_MATCHES_COLUMN: reply_matches, USER_REPLIES_ENTITIES_COLUMN: reply_entities})
         # reset cursor
         cursor = x["Dialogue_ID"]
         scores, alternative_replies, reply_matches, reply_entities = [], [], [], []
@@ -112,7 +112,7 @@ ambiversed_dataset.append({"Dialogue_ID": cursor, "Label": x["Label"],
 
 
 with open(NEW_DATASET_PATH, 'w') as outfile:
-    json.dump(ambiversed_dataset, outfile)
+    json.dump(ambiversed_dataset, outfile, indent=2)
 
 # test read new annotated dataset
 def load_annotated_dataset(path=NEW_DATASET_PATH):
