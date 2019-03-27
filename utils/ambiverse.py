@@ -62,15 +62,15 @@ for index, x in dataset.iterrows():
     # next dialogue sample
     if cursor != x["Dialogue_ID"]:
         if cursor:
-            ambiversed_dataset.append({"Dialogue_ID": cursor, "Label": label,
-                                       REPLY_COLUMN: x[REPLY_COLUMN], CONTEXT_COLUMN: x[CONTEXT_COLUMN], "User_Replies": alternative_replies,
+            ambiversed_dataset.append({"Dialogue_ID": cursor, "Label": x["Label"],
+                                       REPLY_COLUMN: x[REPLY_COLUMN], CONTEXT_COLUMN: x[CONTEXT_COLUMN],
                                        REPLY_MATCHES_COLUMN: correct_reply_matches, CONTEXT_MATCHES_COLUMN: context_matches,
                                        REPLY_ENTITIES_COLUMN: correct_reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities,
-                                       "User_Relevance_Scores": scores,
-                                       ALTERNATIVE_REPLIES_MATCHES_COLUMN: correct_reply_matches, ALTERNATIVE_REPLIES_ENTITIES_COLUMN: context_matches})
+                                       "User_Relevance_Scores": scores, "User_Replies": alternative_replies,
+                                       ALTERNATIVE_REPLIES_MATCHES_COLUMN: reply_matches, ALTERNATIVE_REPLIES_ENTITIES_COLUMN: reply_entities})
         # reset cursor
         cursor = x["Dialogue_ID"]
-        labels, replies, reply_matches, reply_entities = [], [], [], []
+        scores, alternative_replies, reply_matches, reply_entities = [], [], [], []
 
         # parse context only once per dialogue sample
         context_annotations = ambiverse_annotation_request(x[CONTEXT_COLUMN])
