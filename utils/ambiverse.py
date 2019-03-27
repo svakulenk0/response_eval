@@ -18,17 +18,20 @@ NEW_DATASET_PATH = '../datas/HUMOD_Ambiversed.TXT'
 # existing columns
 CONTEXT_COLUMN = 'Dialogue_Context'
 REPLY_COLUMN = 'Reply'
+ALTERNATIVE_REPLY_COLUMN = 'User_Reply'
 
 # new columns with semantic annotations
 CONTEXT_MATCHES_COLUMN = 'Dialogue_Context_Matches'
 REPLY_MATCHES_COLUMN = 'Reply_Matches'
 CONTEXT_ENTITIES_COLUMN = 'Dialogue_Context_Entities'
 REPLY_ENTITIES_COLUMN = 'Reply_Entities'
+ALTERNATIVE_REPLIES_MATCHES_COLUMN = 'Alternative_Replies_Matches'
+ALTERNATIVE_REPLIES_MATCHES_COLUMN = 'Alternative_Replies_Entities'
 
 # 1. load all dialogues
 def load_dataset(path=DATASET_PATH):
     data = pd.read_csv(path, sep="\t")
-    df = data[["Dialogue_ID", "Dialogue_Context", "Reply", "Label"]]
+    df = data[["Dialogue_ID", "Dialogue_Context", "Reply", "Label", "Age", "Gender", "English_Proficency", "User_Relevance_Score", "User_Reply", "Task_ID"]]
     return df
 
 
@@ -59,10 +62,12 @@ for index, x in dataset.iterrows():
     # next dialogue sample
     if cursor != x["Dialogue_ID"]:
         if cursor:
-            ambiversed_dataset.append({"Dialogue_ID": cursor, "Label": labels,
-                                       REPLY_COLUMN: replies, CONTEXT_COLUMN: x[CONTEXT_COLUMN],
-                                       REPLY_MATCHES_COLUMN: reply_matches, CONTEXT_MATCHES_COLUMN: context_matches,
-                                       REPLY_ENTITIES_COLUMN: reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities})
+            ambiversed_dataset.append({"Dialogue_ID": cursor, "Label": label,
+                                       REPLY_COLUMN: x[REPLY_COLUMN], CONTEXT_COLUMN: x[CONTEXT_COLUMN], "User_Replies": alternative_replies,
+                                       REPLY_MATCHES_COLUMN: correct_reply_matches, CONTEXT_MATCHES_COLUMN: context_matches,
+                                       REPLY_ENTITIES_COLUMN: correct_reply_entities, CONTEXT_ENTITIES_COLUMN: context_entities,
+                                       "User_Relevance_Scores": scores,
+                                       ALTERNATIVE_REPLIES_MATCHES_COLUMN: correct_reply_matches, ALTERNATIVE_REPLIES_ENTITIES_COLUMN: context_matches})
         # reset cursor
         cursor = x["Dialogue_ID"]
         labels, replies, reply_matches, reply_entities = [], [], [], []
@@ -75,18 +80,27 @@ for index, x in dataset.iterrows():
         else:
             context_entities = []
 
+        # parse correct reply
+        correct_reply_annotations = ambiverse_annotation_request(x[REPLY_COLUMN])
+        correct_reply_matches = correct_reply_annotations['matches']
+        if 'entities' in correct_reply_annotations:
+            correct_reply_entities = correct_reply_annotations['entities']
+        else:
+            correct_reply_entities = []
+        label = x["Label"]
+
     print(cursor)
 
-    # parse candidate reply
-    reply_annotations = ambiverse_annotation_request(x[REPLY_COLUMN])
+    # parse correct reply
+    reply_annotations = ambiverse_annotation_request(x[ALTERNATIVE_REPLY_COLUMN])
     reply_matches.append(reply_annotations['matches'])
     if 'entities' in reply_annotations:
         reply_entities.append(reply_annotations['entities'])
     else:
         reply_entities.append([])
 
-    replies.append(x[REPLY_COLUMN])
-    labels.append(x["Label"])
+    alternative_replies.append(x[ALTERNATIVE_REPLY_COLUMN])
+    scores.append(x["User_Relevance_Score"])
 
 # add last dialogue
 ambiversed_dataset.append({"Dialogue_ID": cursor, "Label": labels,
