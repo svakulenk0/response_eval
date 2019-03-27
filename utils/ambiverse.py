@@ -26,7 +26,7 @@ REPLY_MATCHES_COLUMN = 'Reply_Matches'
 CONTEXT_ENTITIES_COLUMN = 'Dialogue_Context_Entities'
 REPLY_ENTITIES_COLUMN = 'Reply_Entities'
 ALTERNATIVE_REPLIES_MATCHES_COLUMN = 'Alternative_Replies_Matches'
-ALTERNATIVE_REPLIES_MATCHES_COLUMN = 'Alternative_Replies_Entities'
+ALTERNATIVE_REPLIES_ENTITIES_COLUMN = 'Alternative_Replies_Entities'
 
 # 1. load all dialogues
 def load_dataset(path=DATASET_PATH):
