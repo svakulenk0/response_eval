@@ -49,13 +49,11 @@ data = {"extractConcepts": "true", "language": "en"}
 
 
 def ambiverse_annotation_request(input_text, ignore='Speaker'):
-    if input_text:
-        input_text = re.sub(r'%s'%ignore, '', input_text)
-        data['text'] = input_text
-        response = requests.post(ambiverse_api_url, headers=headers, data=json.dumps(data))
-        return json.loads(response.text)
-    else:
-        return {}
+    input_text = re.sub(r'%s'%ignore, '', input_text)
+    data['text'] = input_text
+    response = requests.post(ambiverse_api_url, headers=headers, data=json.dumps(data))
+    return json.loads(response.text)
+    
 
 
 ambiversed_dataset = []
